@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS Cients (
     PRIMARY KEY (client_id, envent_number)
 )
 
-CREATE TABLE IF NOT EXISTS view_metadata {
+CREATE TABLE IF NOT EXISTS view_metadata (
     table_name varchar(256) PRIMARY KEY,
     last_processed_offset int DEFAULT 0
-}
+)
