@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  docker-compose:
+    name: Validate Docker Compose
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Validate Docker Compose config
+        run: docker compose -f docker-compose.yaml config
+
+      - name: Start services
+        run: docker compose -f docker-compose.yaml up -d --build --wait
+
+      - name: Verify MySQL is running
+        run: docker compose -f docker-compose.yaml exec -T mysql mysqladmin ping -h 127.0.0.1 -uroot -proot --silent
+
+      - name: Tear down services
+        if: always()
+        run: docker compose -f docker-compose.yaml down -v --remove-orphans
