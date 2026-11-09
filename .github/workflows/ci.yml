@@ -20,7 +20,7 @@ jobs:
         run: docker compose -f docker-compose.yaml up -d --build --wait
 
       - name: Verify MySQL is running
-        run: docker compose -f docker-compose.yaml exec -T mysql mysqladmin ping -h 127.0.0.1 -uroot -proot --silent
+        run: docker compose -f docker-compose.yaml exec -T mysql mysqladmin ping -h 127.0.0.1 -uroot -proot
 
       - name: Tear down services
         if: always()
