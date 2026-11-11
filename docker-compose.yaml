@@ -2,11 +2,17 @@ version : '3'
 services:
   mysql:
     image: mysql
-    command: --default-authentication-plugin=mysql_native_password
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: CRM
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
     ports:
       - "3306:3306"
     volumes:
-      - "./db/init.sql:/docker-entrypoint-initdb.d/1.sql"
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "mysql -h localhost -u user -ppassword -D horta -e 'SELECT 1 FROM RecompensasDisponiveis LIMIT 1'"]
+      interval: 60s
+      timeout: 30s
+      retries: 50
