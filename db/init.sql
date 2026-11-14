@@ -11,7 +11,7 @@ CREATE TABLE Clients (
     user_to_blame varchar(255),
     event_type ENUM('CREATE','UPDATE','DELETE'),
     happened_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (client_id, envent_number)
+    PRIMARY KEY (client_id, event_number)
 );
 
 DROP TABLE IF EXISTS view_metadata;
