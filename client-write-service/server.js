@@ -52,7 +52,7 @@ app.post('/update_client', async (req, res) => {
     const { user_to_blame } = req.body;
     const event_number = Number(req.body.event_number)
 
-    if (name !== null && (typeof name !== 'string' || name.length === 0 || name.length > 255))
+    if (name !== null && (typeof name !== 'string' || name.length > 255))
       return res.status(400).json({ error: 'invalid name' });
     if (age !== null && (!Number.isInteger(age) || age < 0 || age > 150))
       return res.status(400).json({ error: 'invalid age' });
