@@ -50,7 +50,5 @@ app.post("/create_client", (req, res) => {
   });
 });
 
-
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+const server = app.listen(PORT, () => console.log(`listening on :${PORT}`));
+process.on('SIGTERM', async () => { server.close(); await pool.end(); });
