@@ -1,5 +1,5 @@
 ## phases
-- [ ] create a client table for the events
+- [x] create a client table for the events
 - [ ] create a backend that can write the events
 - [ ] Make a view (Pure SQL or asyncrones materialized)
 - [ ] python spreadsheet service
