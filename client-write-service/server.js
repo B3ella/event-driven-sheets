@@ -75,7 +75,7 @@ app.post('/update_client', async (req, res, next) => {
       [client_id, event_number, name, age, user_to_blame]
     );
 
-    return res.status(201).json({ client_id: client_id});
+    return res.status(200).json({ client_id: client_id});
 });
 
 app.use((err, _req, res, _next) => {
