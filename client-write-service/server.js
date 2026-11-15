@@ -63,7 +63,11 @@ app.post('/update_client', async (req, res) => {
     if (!Number.isInteger(event_number))
       return res.status(400).json({ error: 'invalid event number' });
 
-    // To-do: check if the client exists on the db
+    const last_event = await pool.execute(
+      `SELECT event_type FROM Clients WHERE client_id=? ORDER BY event_number DESC LIMIT 1
+      `, [client_id]).event_type
+    if (last_event == "DELETE" || !last_event)
+      return res.status(400).json({ error: 'client does not exist' });
 
     const [result] = await pool.execute(
       `INSERT INTO Clients
