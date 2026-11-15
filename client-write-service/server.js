@@ -1,5 +1,4 @@
 const express = require('express');
-const cors = require('cors');
 const mysql = require('mysql2/promise');
 
 const app = express();
@@ -16,7 +15,6 @@ const pool = mysql.createPool({
   queueLimit: 0,
 });
 
-app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
