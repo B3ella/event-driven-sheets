@@ -4,25 +4,17 @@ const cors = require('cors');
 const mysql = require('mysql2/promise');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
-
-const mysql = require('mysql2');
-const connection = mysql.createConnection({
-    host: 'localhost',
-    port: 3306,
-    database: 'CRM',
-    user: 'user',
-    password: 'password'
-});
-
-connection.connect(function(err) {
-    if (err) {
-        console.log("error occurred while connecting");
-        console.log(err);
-    } else {
-        console.log("connection created with mysql successfully");
-    }
+const pool = mysql.createPool({
+  host: process.env.DB_HOST || 'localhost',
+  port: Number(process.env.DB_PORT) || 3306,
+  database: process.env.DB_NAME || 'CRM',
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
 });
 
 app.use(cors());
