@@ -18,7 +18,7 @@ const pool = mysql.createPool({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.post('/create_client', async (req, res, next) => {
+app.post('/create_client', async (req, res) => {
     const { name, user_to_blame } = req.body;
     const age = Number(req.body.age)
 
@@ -42,11 +42,9 @@ app.post('/create_client', async (req, res, next) => {
       [result.insertId]
     );
     return res.status(201).json({ client_id: row.client_id });
-    throw lastErr;
-    next(err);
 });
 
-app.post('/update_client', async (req, res, next) => {
+app.post('/update_client', async (req, res) => {
     const name = req.body.name ?? null
     const age = req.body.age ? Number(req.body.age) : null
 
@@ -76,11 +74,6 @@ app.post('/update_client', async (req, res, next) => {
     );
 
     return res.status(200).json({ client_id: client_id});
-});
-
-app.use((err, _req, res, _next) => {
-  console.error(err);
-  res.status(500).json({ error: 'internal error' });
 });
 
 const server = app.listen(PORT, () => console.log(`listening on :${PORT}`));
