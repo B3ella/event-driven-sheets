@@ -8,8 +8,8 @@ const pool = mysql.createPool({
   host: process.env.DB_HOST || 'localhost',
   port: Number(process.env.DB_PORT) || 3306,
   database: process.env.DB_NAME || 'CRM',
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
+  user: process.env.DB_USER || 'user',
+  password: process.env.DB_PASSWORD || 'password',
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
@@ -18,8 +18,9 @@ const pool = mysql.createPool({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.post('/clients', async (req, res, next) => {
-    const { name, age, user_to_blame } = req.body;
+app.post('/create_client', async (req, res, next) => {
+    const { name, user_to_blame } = req.body;
+    const age = Number(req.body.age)
 
     if (typeof name !== 'string' || name.length === 0 || name.length > 255)
       return res.status(400).json({ error: 'invalid name' });
