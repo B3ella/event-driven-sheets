@@ -76,5 +76,30 @@ app.post('/update_client', async (req, res) => {
     return res.status(200).json({ client_id: client_id});
 });
 
+app.post('/delete_client', async (req, res) => {
+    const client_id = Number(req.body.client_id)
+    const { user_to_blame } = req.body;
+    const event_number = Number(req.body.event_number)
+
+    if (typeof user_to_blame !== 'string' || user_to_blame.length === 0)
+      return res.status(400).json({ error: 'invalid user_to_blame' });
+    if (!Number.isInteger(client_id))
+      return res.status(400).json({ error: 'invalid client id' });
+    if (!Number.isInteger(event_number))
+      return res.status(400).json({ error: 'invalid event number' });
+
+    // To-do?: check if the client exists on the db?
+
+    const [result] = await pool.execute(
+      `INSERT INTO Clients
+         (client_id, event_number, user_to_blame, event_type)
+       VALUES
+         (?, ?, ?, 'DELETE')`,
+      [client_id, event_number, user_to_blame]
+    );
+
+    return res.status(204);
+});
+
 const server = app.listen(PORT, () => console.log(`listening on :${PORT}`));
 process.on('SIGTERM', async () => { server.close(); await pool.end(); });
