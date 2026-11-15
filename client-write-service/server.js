@@ -21,25 +21,36 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/", (req, res) => {
-  res.send("Hello, Express!");
+app.post('/clients', async (req, res, next) => {
+    const { name, age, user_to_blame } = req.body;
+
+    if (typeof name !== 'string' || name.length === 0 || name.length > 255)
+      return res.status(400).json({ error: 'invalid name' });
+    if (!Number.isInteger(age) || age < 0 || age > 150)
+      return res.status(400).json({ error: 'invalid age' });
+    if (typeof user_to_blame !== 'string' || user_to_blame.length === 0)
+      return res.status(400).json({ error: 'invalid user_to_blame' });
+
+    const [result] = await pool.execute(
+      `INSERT INTO Clients
+         (client_id, event_number, name, age, user_to_blame, event_type)
+       SELECT COALESCE(MAX(client_id), 0) + 1, 0, ?, ?, ?, 'CREATE'
+       FROM Clients`,
+      [name, age, user_to_blame]
+    );
+
+    const [[row]] = await pool.execute(
+      `SELECT client_id FROM Clients WHERE event_offset = ?`,
+      [result.insertId]
+    );
+    return res.status(201).json({ client_id: row.client_id });
+    throw lastErr;
+    next(err);
 });
 
-app.post("/create_client", (req, res) => {
-  const {name, age, user_to_blame} = req.body;
-  const event_type = "CREATE"
-  const event_number = 0
-  const client_id = "COALESCE(MAX(client_id), 0) + 1";
-
-  let sql = `INSERT INTO Clients
-        (client_id, event_number, name, age, user_to_blame, event_type) SELECT
-        ${client_id}, ${event_number}, '${name}', ${age}, '${user_to_blame}', '${event_type}'
-        FROM Clients;`
-
-  connection.query(sql, function (err, result) {
-    if (err) throw err;
-    res.send("1 record inserted");
-  });
+app.use((err, _req, res, _next) => {
+  console.error(err);
+  res.status(500).json({ error: 'internal error' });
 });
 
 const server = app.listen(PORT, () => console.log(`listening on :${PORT}`));
