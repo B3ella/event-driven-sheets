@@ -30,17 +30,22 @@ app.get("/", (req, res) => {
 });
 
 app.post("/create_client", (req, res) => {
-  const {client_id, event_number, name, age, user_to_blame, event_type} = req.body;
+  const {name, age, user_to_blame} = req.body;
+  const event_type = "CREATE"
+  const event_number = 0
+  const client_id = "COALESCE(MAX(client_id), 0) + 1";
 
   let sql = `INSERT INTO Clients
-        (client_id, event_number, name, age, user_to_blame, event_type) VALUES
-        (${client_id}, ${event_number}, '${name}', ${age}, '${user_to_blame}', '${event_type}')`;
+        (client_id, event_number, name, age, user_to_blame, event_type) SELECT
+        ${client_id}, ${event_number}, '${name}', ${age}, '${user_to_blame}', '${event_type}'
+        FROM Clients;`
 
   connection.query(sql, function (err, result) {
     if (err) throw err;
     res.send("1 record inserted");
   });
 });
+
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
