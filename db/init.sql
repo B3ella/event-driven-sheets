@@ -1,8 +1,7 @@
 CREATE DATABASE IF NOT EXISTS CRM;
 USE CRM;
 
-DROP TABLE IF EXISTS Clients;
-CREATE TABLE Clients (
+CREATE TABLE IF NOT EXISTS Clients (
     event_offset INT AUTO_INCREMENT UNIQUE KEY,
     client_id int,
     event_number int,
@@ -14,7 +13,6 @@ CREATE TABLE Clients (
     PRIMARY KEY (client_id, event_number)
 );
 
-DROP TABLE IF EXISTS view_metadata;
 CREATE TABLE IF NOT EXISTS view_metadata (
     table_name varchar(256) PRIMARY KEY,
     last_processed_offset int DEFAULT 0

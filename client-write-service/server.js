@@ -22,18 +22,24 @@ connection.connect(function(err) {
     }
 });
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 app.get("/", (req, res) => {
   res.send("Hello, Express!");
 });
 
 app.post("/create_client", (req, res) => {
-  let sql = "INSERT INTO Clients (client_id, event_number, name, age, user_to_blame, event_type) VALUES (0, 0, 'joão', 22, bella)";
+  const {client_id, event_number, name, age, user_to_blame, event_type} = req.body;
+
+  let sql = `INSERT INTO Clients
+        (client_id, event_number, name, age, user_to_blame, event_type) VALUES
+        (${client_id}, ${event_number}, '${name}', ${age}, '${user_to_blame}', '${event_type}')`;
+
   connection.query(sql, function (err, result) {
     if (err) throw err;
     res.send("1 record inserted");
-    return;
   });
-  res.send("miau");
 });
 
 app.listen(PORT, () => {
