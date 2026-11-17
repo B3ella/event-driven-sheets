@@ -1,5 +1,11 @@
 version : '3'
 services:
+  client-write-service:
+    depends_on:
+      mysql:
+        condition: service_healthy
+    build:
+      dockerfile: ./client-write-service/dockerfile
   mysql:
     image: mysql
     environment:
