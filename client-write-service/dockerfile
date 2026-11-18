@@ -1,6 +1,7 @@
-FROM node
+FROM node:alpine
 WORKDIR /app
-COPY package.json /app
+COPY client-write-service/package.json /app
 RUN npm install
-COPY server.js /app
+COPY client-write-service/server.js /app
+EXPOSE 3000
 CMD ["node","server.js"]
