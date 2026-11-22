@@ -12,8 +12,10 @@ const pool = mysql.createPool({
 });
 
 async function main(){
-  last_offset = await get_last_processed_offset("Clients");
-  console.log(last_offset)
+  const table = "Clients"
+  const last_offset = await get_last_processed_offset(table);
+  const result = await read_from_offset(table, last_offset)
+  console.log(result)
 }
 
 async function get_last_processed_offset(table){
@@ -24,7 +26,17 @@ async function get_last_processed_offset(table){
   if (rows[0]){
     return rows[0].get("last_processed_offset")
   }
-  return -1
+  return "-1"
+}
+
+async function read_from_offset(table, offset){
+  console.log(table, offset)
+  const query = `SELECT * FROM ${table} WHERE event_offset > ?;`;
+  const [rows] = await pool.execute(
+    query,
+    [offset]
+  );
+  return rows
 }
 
 main()
