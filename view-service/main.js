@@ -10,3 +10,21 @@ const pool = mysql.createPool({
   connectionLimit: 10,
   queueLimit: 0,
 });
+
+async function main(){
+  last_offset = await get_last_processed_offset("Clients");
+  console.log(last_offset)
+}
+
+async function get_last_processed_offset(table){
+  const [rows] = await pool.execute(
+    `SELECT last_processed_offset FROM view_metadata WHERE table_name='?'`,
+    [table]
+  );
+  if (rows[0]){
+    return rows[0].get("last_processed_offset")
+  }
+  return -1
+}
+
+main()
