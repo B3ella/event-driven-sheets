@@ -5,7 +5,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 const pool = mysql.createPool({
-  host: process.env.DB_HOST || 'localhost',
+  host: process.env.DB_HOST || 'mysql',
   port: Number(process.env.DB_PORT) || 3306,
   database: process.env.DB_NAME || 'CRM',
   user: process.env.DB_USER || 'user',
