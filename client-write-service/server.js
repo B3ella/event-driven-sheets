@@ -66,7 +66,7 @@ app.post('/update_client', async (req, res) => {
     const [[row]] = await pool.execute(
       `SELECT event_type FROM Clients WHERE client_id=? ORDER BY event_number DESC LIMIT 1
       `, [client_id])
-    const last_event = row.get("event_type")
+    const last_event = row.event_type
     console.log(last_event)
     if (last_event == "DELETE" || !last_event)
       return res.status(400).json({ error: 'client does not exist' });
