@@ -50,6 +50,10 @@ function project_clients(events) {
         clients[client_id] = {name, age, command: "_CREATE"};
         continue
     }
+    if (event_type == "DELETE" && clients[client_id]?.command=="_CREATE"){
+        delete clients[client_id]
+        continue
+    }
     if (event_type == "DELETE"){
         clients[client_id] = {command: "_DELETE"};
         continue
