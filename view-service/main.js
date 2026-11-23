@@ -25,7 +25,7 @@ async function get_last_processed_offset(table){
     [table]
   );
   if (rows[0]){
-    return rows[0].get("last_processed_offset")
+    return rows[0].last_processed_offset
   }
   return "-1"
 }
