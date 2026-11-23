@@ -14,8 +14,9 @@ const pool = mysql.createPool({
 async function main(){
   const table = "Clients"
   const last_offset = await get_last_processed_offset(table);
-  const result = await read_from_offset(table, last_offset)
-  console.log(result)
+  const result = await read_from_offset(table, last_offset);
+  const clients = project_clients(result);
+  console.log(clients)
 }
 
 async function get_last_processed_offset(table){
@@ -30,13 +31,23 @@ async function get_last_processed_offset(table){
 }
 
 async function read_from_offset(table, offset){
-  console.log(table, offset)
   const query = `SELECT * FROM ${table} WHERE event_offset > ? ORDER BY event_offset;`;
   const [rows] = await pool.execute(
     query,
     [offset]
   );
   return rows
+}
+
+function project_clients(events) {
+  clients = {};
+  for (let i = 0; i < events.length; i++){
+    const {event_type, client_id, name, age} = events[i];
+    if (event_type == "CREATE"){
+        clients[client_id] = {name, age, command: "_CREATE"}
+    }
+  }
+  return clients
 }
 
 main()
