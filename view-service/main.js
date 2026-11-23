@@ -31,7 +31,7 @@ async function get_last_processed_offset(table){
 
 async function read_from_offset(table, offset){
   console.log(table, offset)
-  const query = `SELECT * FROM ${table} WHERE event_offset > ?;`;
+  const query = `SELECT * FROM ${table} WHERE event_offset > ? ORDER BY event_offset;`;
   const [rows] = await pool.execute(
     query,
     [offset]
