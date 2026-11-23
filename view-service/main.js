@@ -79,6 +79,13 @@ function generate_queries(clients) {
   for (const [client_id, client] of Object.entries(clients)) {
     if (client.command == "_DELETE") {
         queries.push(`DELETE FROM Client_view WHERE client_id=${client_id}`)
+        continue
+    }
+    if (client.command == "_CREATE") {
+        const {name, age} = client
+        queries.push(`INSERT INTO Client_view (client_id, age, name) VALUES (${client_id}, ${age}, ${name})`
+        )
+        continue
     }
   }
   return queries
