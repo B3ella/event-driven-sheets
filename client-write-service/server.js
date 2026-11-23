@@ -63,9 +63,10 @@ app.post('/update_client', async (req, res) => {
     if (!Number.isInteger(event_number))
       return res.status(400).json({ error: 'invalid event number' });
 
-    const [rows] = await pool.execute(
+    const [[row]] = await pool.execute(
       `SELECT event_type FROM Clients WHERE client_id=? ORDER BY event_number DESC LIMIT 1
       `, [client_id])
+    const last_event = row.get("event_type")
     console.log(last_event)
     if (last_event == "DELETE" || !last_event)
       return res.status(400).json({ error: 'client does not exist' });
