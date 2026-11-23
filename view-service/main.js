@@ -83,7 +83,15 @@ function generate_queries(clients) {
     }
     if (client.command == "_CREATE") {
         const {name, age} = client
-        queries.push(`INSERT INTO Client_view (client_id, age, name) VALUES (${client_id}, ${age}, ${name})`
+        queries.push(
+          `INSERT INTO Client_view (client_id, age, name) VALUES (${client_id}, ${age}, ${name})`
+        )
+        continue
+    }
+    if (client.command == "_UPDATE") {
+        const {name, age} = client
+        queries.push(
+          `UPDATE Client_view SET age=${age}, name=${name} WHERE client_id = ${client_id}`
         )
         continue
     }
