@@ -18,3 +18,9 @@ CREATE TABLE IF NOT EXISTS view_metadata (
     table_name            VARCHAR(256) PRIMARY KEY,
     last_processed_offset BIGINT UNSIGNED NOT NULL DEFAULT 0
 );
+
+CREATE TABLE IF NOT EXISTS Client_view (
+    client_id      INT UNSIGNED PRIMARY KEY,
+    name           VARCHAR(255) NULL,
+    age            INT NULL,
+)

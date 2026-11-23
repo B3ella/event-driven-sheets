@@ -78,7 +78,7 @@ function generate_queries(clients) {
   queries = []
   for (const [client_id, client] of Object.entries(clients)) {
     if (client.command == "_DELETE") {
-        queries.push(`DELETE FROM CLIENTS WHERE client_id=${client_id}`)
+        queries.push(`DELETE FROM Client_view WHERE client_id=${client_id}`)
     }
   }
   return queries
