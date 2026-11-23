@@ -42,9 +42,23 @@ async function read_from_offset(table, offset){
 function project_clients(events) {
   clients = {};
   for (let i = 0; i < events.length; i++){
+    console.log(events[i])
     const {event_type, client_id, name, age} = events[i];
     if (event_type == "CREATE"){
-        clients[client_id] = {name, age, command: "_CREATE"}
+        clients[client_id] = {name, age, command: "_CREATE"};
+        continue
+    }
+    if (event_type == "UPDATE" ){
+        if (age){
+            clients[client_id].age = age;
+        }
+        if (name){
+            clients[client_id].name = name;
+        }
+        if (!clients[client_id]){
+            clients[client_id].command = "_UPDATE";
+        }
+        continue
     }
   }
   return clients
