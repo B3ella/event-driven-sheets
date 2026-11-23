@@ -16,7 +16,9 @@ async function main(){
   const last_offset = await get_last_processed_offset(table);
   const result = await read_from_offset(table, last_offset);
   const clients = project_clients(result);
+  const queries = generate_queries(clients)
   console.log(clients)
+  console.log(queries)
 }
 
 async function get_last_processed_offset(table){
@@ -66,6 +68,16 @@ function project_clients(events) {
     }
   }
   return clients
+}
+
+function generate_queries(clients) {
+  queries = []
+  for (const [client_id, client] of Object.entries(clients)) {
+    if (client.command == "_DELETE") {
+        queries.push(`DELETE FROM CLIENTS WHERE client_id=${client_id}`)
+    }
+  }
+  return queries
 }
 
 main()
